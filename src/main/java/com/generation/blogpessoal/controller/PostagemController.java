@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.generation.blogpessoal.model.Postagem;
 import com.generation.blogpessoal.repository.PostagemRepository;
+import com.generation.blogpessoal.repository.TemaRepository;
 
 @RestController
 @RequestMapping("/postagens")
@@ -27,6 +28,9 @@ public class PostagemController {
 
 	@Autowired // da acesso ao meu controller a responsabilidade de criar e instanciar objetos
 	private PostagemRepository postagemRepository;
+	
+	@Autowired
+	private TemaRepository temaRepository;
 
 	@GetMapping // n podem existir 2 getmapping iguais
 	public ResponseEntity<List<Postagem>> getAll() {
@@ -50,22 +54,27 @@ public class PostagemController {
 
 	@PostMapping
 	public ResponseEntity<Postagem> postPostagem(@Valid @RequestBody Postagem postagem) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(postagemRepository.save(postagem));
+		if(temaRepository.existsById(postagem.getTema().getId()))
+			return ResponseEntity.status(HttpStatus.CREATED).body(postagemRepository.save(postagem));
+
+		return ResponseEntity.notFound().build();
+		
+				//ResponseEntity.status(HttpStatus.CREATED).body(postagemRepository.save(postagem));
 		// chamo o status Created e no corpo do meu status eu salvo o objeto postagem e
 		// recebo o ok
 	}
 
 	@PutMapping
 	public ResponseEntity<Postagem> putPostagem(@Valid @RequestBody Postagem postagem) {
-		// return
-		// ResponseEntity.status(HttpStatus.OK).body(postagemRepository.save(postagem));
-		return postagemRepository.findById(postagem.getId()) // procura pelo id
-				.map(resposta -> ResponseEntity.status(HttpStatus.OK).body(postagemRepository.save(postagem))) // realiza
-																												// se
-																												// resposta
-																												// n for
-																												// nulla
-				.orElse(ResponseEntity.notFound().build()); // realiza se a resposta for nulla
+		if(temaRepository.existsById(postagem.getTema().getId())) {
+			return postagemRepository.findById(postagem.getId()) // procura pelo id
+					.map(resposta -> ResponseEntity.status(HttpStatus.OK).body(postagemRepository.save(postagem))) 
+					// realiza se resposta n for nulla
+					.orElse(ResponseEntity.notFound().build()); 
+					// realiza se a resposta for nulla
+		} 
+			return ResponseEntity.notFound().build();
+		
 	}
 
 //	@DeleteMapping("/{id}")
