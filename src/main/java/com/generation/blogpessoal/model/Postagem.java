@@ -39,6 +39,14 @@ public class Postagem {
 	//@NotBlank
 	private Tema tema;
 	
+	/**
+	 * Relacionamento com a classe Usuario
+	 * Não esqueça de criar os métodos getters e setters para o atributo usuario.
+	 */
+	@ManyToOne
+	@JsonIgnoreProperties("postagem")
+	private Usuario usuario;
+	
 	//Getters & Setters
 	
 	public Long getId() {
@@ -70,6 +78,12 @@ public class Postagem {
 	}
 	public void setTema(Tema tema) {
 		this.tema = tema;
+	}
+	public Usuario getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 	
 }
