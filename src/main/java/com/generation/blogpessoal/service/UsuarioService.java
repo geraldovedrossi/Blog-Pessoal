@@ -253,5 +253,13 @@ public class UsuarioService {
 		return "Basic " + new String(tokenBase64);
 
 	}
+	
+	public String testarBasicToken(String usuario, String senha) {
+
+		String token = usuario + ":" + senha;
+		byte[] tokenBase64 = Base64.encodeBase64(token.getBytes(Charset.forName("US-ASCII")));
+		return "Basic " + new String(tokenBase64);
+
+	}
 
 }
