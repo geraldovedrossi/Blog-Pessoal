@@ -32,7 +32,8 @@ public class PostagemController {
 	@Autowired
 	private TemaRepository temaRepository;
 
-	@GetMapping // n podem existir 2 getmapping iguais
+	
+	@GetMapping("/all") // n podem existir 2 getmapping iguais
 	public ResponseEntity<List<Postagem>> getAll() {
 		return ResponseEntity.ok(postagemRepository.findAll());
 	} // equivalente a fazer = select * from tb_postagens;
@@ -57,7 +58,7 @@ public class PostagemController {
 		if(temaRepository.existsById(postagem.getTema().getId()))
 			return ResponseEntity.status(HttpStatus.CREATED).body(postagemRepository.save(postagem));
 
-		return ResponseEntity.notFound().build();
+		return ResponseEntity.badRequest().build();
 		
 				//ResponseEntity.status(HttpStatus.CREATED).body(postagemRepository.save(postagem));
 		// chamo o status Created e no corpo do meu status eu salvo o objeto postagem e
@@ -73,7 +74,7 @@ public class PostagemController {
 					.orElse(ResponseEntity.notFound().build()); 
 					// realiza se a resposta for nulla
 		} 
-			return ResponseEntity.notFound().build();
+			return ResponseEntity.badRequest().build();
 		
 	}
 
